@@ -373,18 +373,20 @@ namespace DelegatesAndEvents
             return result;
         }
 
-        public static double Trace(this SquareMatrix traceMatrix)
+        public static int Trace(this SquareMatrix traceMatrix)
         {
-            double traceResult = 0;
+            int trace = 0;
 
             for (int rowIndex = 0; rowIndex < traceMatrix.size; ++rowIndex)
             {
-                traceResult += traceMatrix.matrix[rowIndex, rowIndex];
+                trace += traceMatrix.matrix[rowIndex, rowIndex];
             }
 
-            return traceResult;
+            return trace;
         }
     }
+
+    public delegate SquareMatrix DiagonalizeMatrixDelegate(SquareMatrix matrix);
 
     class Program
     {
@@ -394,6 +396,20 @@ namespace DelegatesAndEvents
             int matrixSize = random.Next(3, 5);
             SquareMatrix myMatrix1 = new SquareMatrix(matrixSize);
             SquareMatrix myMatrix2 = new SquareMatrix(matrixSize);
+            DiagonalizeMatrixDelegate diagonalizeMatrixDelegate = delegate (SquareMatrix matrix)
+            {
+                for (int rowIndex = 0; rowIndex < matrix.size; ++rowIndex)
+                {
+                    for (int columnIndex = 0; columnIndex < matrix.size; ++columnIndex)
+                    {
+                        if (rowIndex != columnIndex)
+                        {
+                            matrix.matrix[rowIndex, columnIndex] = 0;
+                        }
+                    }
+                }
+                return matrix;
+            };
 
             Console.WriteLine("\n Матрица 1:");
             Console.WriteLine(myMatrix1);
@@ -411,6 +427,10 @@ namespace DelegatesAndEvents
             Console.WriteLine(myMatrix1.Inverse());
             Console.WriteLine(" Матрица, обратная 2-ой:");
             Console.WriteLine(myMatrix2.Inverse());
+            Console.WriteLine(" Диагональная матрица 1:");
+            Console.WriteLine(diagonalizeMatrixDelegate(myMatrix1));
+            Console.WriteLine(" Диагональная матрица 2:");
+            Console.WriteLine(diagonalizeMatrixDelegate(myMatrix2));
             Console.WriteLine(" 1-ая матрица больше 2-ой: " + (myMatrix1 > myMatrix2) + "\n");
             Console.WriteLine(" 1-ая матрица меньше 2-ой: " + (myMatrix1 < myMatrix2) + "\n");
             Console.WriteLine(" 1-ая матрица больше или равна 2-ой: " + (myMatrix1 >= myMatrix2) + "\n");
