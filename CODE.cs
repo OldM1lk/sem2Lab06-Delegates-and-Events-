@@ -388,12 +388,12 @@ namespace DelegatesAndEvents
 
     public delegate SquareMatrix DiagonalizeMatrixDelegate(SquareMatrix matrix);
 
-    public abstract class Operation
+    public abstract class IOperation
     {
         public string OperationType;
     }
 
-    class Add : Operation
+    class Add : IOperation
     {
         public Add()
         {
@@ -401,7 +401,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Multiplication : Operation
+    class Multiplication : IOperation
     {
         public Multiplication()
         {
@@ -409,7 +409,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class More : Operation
+    class More : IOperation
     {
         public More()
         {
@@ -417,7 +417,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Less : Operation
+    class Less : IOperation
     {
         public Less()
         {
@@ -425,7 +425,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class MoreOrEqual : Operation
+    class MoreOrEqual : IOperation
     {
         public MoreOrEqual()
         {
@@ -433,7 +433,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class LessOrEqual : Operation
+    class LessOrEqual : IOperation
     {
         public LessOrEqual()
         {
@@ -441,7 +441,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Equal : Operation
+    class Equal : IOperation
     {
         public Equal()
         {
@@ -449,7 +449,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class NotEqual : Operation
+    class NotEqual : IOperation
     {
         public NotEqual()
         {
@@ -457,7 +457,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Determinant : Operation
+    class Determinant : IOperation
     {
         public Determinant()
         {
@@ -465,7 +465,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Inverse : Operation
+    class Inverse : IOperation
     {
         public Inverse()
         {
@@ -473,7 +473,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Transposition : Operation
+    class Transposition : IOperation
     {
         public Transposition()
         {
@@ -481,7 +481,7 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Trace : Operation
+    class Trace : IOperation
     {
         public Trace()
         {
@@ -489,11 +489,346 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Diagonal : Operation
+    class Diagonal : IOperation
     {
         public Diagonal()
         {
             OperationType = "diagonal";
+        }
+    }
+
+    public abstract class BaseHandler
+    {
+        protected BaseHandler Next;
+        protected IOperation Operation;
+
+        public BaseHandler()
+        {
+            Next = null;
+        }
+
+        public virtual void Handle(IOperation operation)
+        {
+            if (Operation.OperationType == operation.OperationType)
+            {
+                Console.WriteLine("Операция успешно обработана");
+            }
+            else
+            {
+                Console.WriteLine("Не могу обработать, отправляю следующему обработчику...");
+                
+                if (Next != null)
+                {
+                    Next.Handle(operation);
+                }
+                else
+                {
+                    Console.WriteLine("Неизвестная операция, не могу обработать.");
+                }
+            }
+        }
+
+        protected void SetNextHandler(BaseHandler newHandler)
+        {
+            Next = newHandler;
+        }
+    }
+
+    class AddHandler : BaseHandler
+    {
+        public AddHandler()
+        {
+            Operation = new Add();
+            Next = new MultiplicationHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" Сумма матриц:");
+            Console.WriteLine(matrix1 + matrix2);
+        }
+    }
+
+    class MultiplicationHandler : BaseHandler
+    {
+        public MultiplicationHandler()
+        {
+            Operation = new Multiplication();
+            Next = new MoreHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" Произведение матриц:");
+            Console.WriteLine(matrix1 * matrix2);
+        }
+    }
+
+    class MoreHandler : BaseHandler
+    {
+        public MoreHandler()
+        {
+            Operation = new More();
+            Next = new LessHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" 1-ая матрица больше 2-ой: " + (matrix1 > matrix2) + "\n");
+        }
+    }
+
+    class LessHandler : BaseHandler
+    {
+        public LessHandler()
+        {
+            Operation = new Less();
+            Next = new MoreOrEqualHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" 1-ая матрица меньше 2-ой: " + (matrix1 < matrix2) + "\n");
+        }
+    }
+
+    class MoreOrEqualHandler : BaseHandler
+    {
+        public MoreOrEqualHandler()
+        {
+            Operation = new MoreOrEqual();
+            Next = new LessOrEqualHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" 1-ая матрица больше или равна 2-ой: " + (matrix1 >= matrix2) + "\n");
+        }
+    }
+
+    class LessOrEqualHandler : BaseHandler
+    {
+        public LessOrEqualHandler()
+        {
+            Operation = new LessOrEqual();
+            Next = new EqualHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" 1-ая матрица меньше или равна 2-ой: " + (matrix1 <= matrix2) + "\n");
+        }
+    }
+
+    class EqualHandler : BaseHandler
+    {
+        public EqualHandler()
+        {
+            Operation = new Equal();
+            Next = new NotEqualHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" Матрицы равны: " + (matrix1 == matrix2) + "\n");
+        }
+    }
+
+    class NotEqualHandler : BaseHandler
+    {
+        public NotEqualHandler()
+        {
+            Operation = new NotEqual();
+            Next = new DeterminantHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix1 = new SquareMatrix(matrixSize);
+            SquareMatrix matrix2 = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица 1:");
+            Console.WriteLine(matrix1);
+            Console.WriteLine(" Матрица 2:");
+            Console.WriteLine(matrix2);
+            Console.WriteLine(" Матрицы не равны: " + (matrix1 != matrix2) + "\n");
+        }
+    }
+
+    class DeterminantHandler : BaseHandler
+    {
+        public DeterminantHandler()
+        {
+            Operation = new Determinant();
+            Next = new InverseHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица:");
+            Console.WriteLine(matrix);
+            Console.WriteLine(" Определитель матрицы: " + matrix.Determinant() + "\n");
+        }
+    }
+
+    class InverseHandler : BaseHandler
+    {
+        public InverseHandler()
+        {
+            Operation = new Inverse();
+            Next = new TranspositionHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица:");
+            Console.WriteLine(matrix);
+            Console.WriteLine(" Обратная матрица:");
+            Console.WriteLine(matrix.Inverse());
+        }
+    }
+
+    class TranspositionHandler : BaseHandler
+    {
+        public TranspositionHandler()
+        {
+            Operation = new Transposition();
+            Next = new TraceHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица:");
+            Console.WriteLine(matrix);
+            Console.WriteLine(" Транспонированная матрица:");
+            Console.WriteLine(matrix.Transposed());
+        }
+    }
+
+    class TraceHandler : BaseHandler
+    {
+        public TraceHandler()
+        {
+            Operation = new Trace();
+            Next = new DiagonalHandler();
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix = new SquareMatrix(matrixSize);
+
+            Console.WriteLine("\n Матрица:");
+            Console.WriteLine(matrix);
+            Console.WriteLine(" След матрицы: " + matrix.Trace() + "\n");
+        }
+    }
+
+    class DiagonalHandler : BaseHandler
+    {
+        public DiagonalHandler()
+        {
+            Operation = new Diagonal();
+            Next = null;
+            Random random = new Random();
+            int matrixSize = random.Next(3, 5);
+            SquareMatrix matrix = new SquareMatrix(matrixSize);
+
+            DiagonalizeMatrixDelegate diagonalizeMatrixDelegate = delegate (SquareMatrix matrixForDiagonalize)
+            {
+                for (int rowIndex = 0; rowIndex < matrix.size; ++rowIndex)
+                {
+                    for (int columnIndex = 0; columnIndex < matrix.size; ++columnIndex)
+                    {
+                        if (rowIndex != columnIndex)
+                        {
+                            matrixForDiagonalize.matrix[rowIndex, columnIndex] = 0;
+                        }
+                    }
+                }
+                return matrixForDiagonalize;
+            };
+
+            Console.WriteLine("\n Матрица:");
+            Console.WriteLine(matrix);
+            Console.WriteLine(" Диагонализированная матрица:");
+            Console.WriteLine(diagonalizeMatrixDelegate(matrix));
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int userChoice;
+            BaseHandler operationHandler;
+            operationHandler = new AddHandler();
+
+            Console.WriteLine(" Какаю операцию вы хотите выполнить? (напишите только цифру)\n" +
+                              " 1. Сложить две случайные матрицы\n" +
+                              " 2. Умножить две случайные матрицы\n" +
+                              " 3. Посчитать определитель случайной матрицы\n" +
+                              " 4. Найти матрицу, обратную случайной матрице\n" +
+                              " 5. Транспонировать случайную матрицу\n" +
+                              " 6. Найти след случайной матрицы\n" +
+                              " 7. Привести матрицу к диагональному виду\n");
+            Console.Write("Ваш выбор: ");
+            userChoice = Convert.ToInt32(Console.ReadLine());
+
+            switch (userChoice)
+            {
+                case 1:
+                    //operationHandler.Handle(new AddHandler());
+                    break;
+                case 2:
+                    operationHandler = new MultiplicationHandler();
+                    break;
+                case 3:
+                    operationHandler = new DeterminantHandler();
+                    break;
+                case 4:
+                    operationHandler = new InverseHandler();
+                    break;
+                case 5:
+                    operationHandler = new TranspositionHandler();
+                    break;
+                case 6:
+                    operationHandler = new TraceHandler();
+                    break;
+                case 7:
+                    operationHandler = new DiagonalHandler();
+                    break;
+            }
         }
     }
 }
