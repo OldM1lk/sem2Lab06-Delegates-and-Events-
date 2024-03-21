@@ -388,59 +388,112 @@ namespace DelegatesAndEvents
 
     public delegate SquareMatrix DiagonalizeMatrixDelegate(SquareMatrix matrix);
 
-    class Program
+    public abstract class Operation
     {
-        static void Main(string[] args)
-        {
-            Random random = new Random();
-            int matrixSize = random.Next(3, 5);
-            SquareMatrix myMatrix1 = new SquareMatrix(matrixSize);
-            SquareMatrix myMatrix2 = new SquareMatrix(matrixSize);
-            DiagonalizeMatrixDelegate diagonalizeMatrixDelegate = delegate (SquareMatrix matrix)
-            {
-                for (int rowIndex = 0; rowIndex < matrix.size; ++rowIndex)
-                {
-                    for (int columnIndex = 0; columnIndex < matrix.size; ++columnIndex)
-                    {
-                        if (rowIndex != columnIndex)
-                        {
-                            matrix.matrix[rowIndex, columnIndex] = 0;
-                        }
-                    }
-                }
-                return matrix;
-            };
+        public string OperationType;
+    }
 
-            Console.WriteLine("\n Матрица 1:");
-            Console.WriteLine(myMatrix1);
-            Console.WriteLine(" Матрица 2:");
-            Console.WriteLine(myMatrix2);
-            Console.WriteLine(" Сумма матриц:");
-            Console.WriteLine(myMatrix1 + myMatrix2);
-            Console.WriteLine(" Произведение матриц:");
-            Console.WriteLine(myMatrix1 * myMatrix2);
-            Console.WriteLine(" Определитель 1-ой матрицы: " + myMatrix1.Determinant() + "\n");
-            Console.WriteLine(" Определитель 2-ой матрицы: " + myMatrix2.Determinant() + "\n");
-            Console.WriteLine(" След 1-ой матрицы: " + myMatrix1.Trace() + "\n");
-            Console.WriteLine(" След 2-ой матрицы: " + myMatrix2.Trace() + "\n");
-            Console.WriteLine(" Матрица, обратная 1-ой:");
-            Console.WriteLine(myMatrix1.Inverse());
-            Console.WriteLine(" Матрица, обратная 2-ой:");
-            Console.WriteLine(myMatrix2.Inverse());
-            Console.WriteLine(" Диагональная матрица 1:");
-            Console.WriteLine(diagonalizeMatrixDelegate(myMatrix1));
-            Console.WriteLine(" Диагональная матрица 2:");
-            Console.WriteLine(diagonalizeMatrixDelegate(myMatrix2));
-            Console.WriteLine(" 1-ая матрица больше 2-ой: " + (myMatrix1 > myMatrix2) + "\n");
-            Console.WriteLine(" 1-ая матрица меньше 2-ой: " + (myMatrix1 < myMatrix2) + "\n");
-            Console.WriteLine(" 1-ая матрица больше или равна 2-ой: " + (myMatrix1 >= myMatrix2) + "\n");
-            Console.WriteLine(" 1-ая матрица меньше или равна 2-ой: " + (myMatrix1 <= myMatrix2) + "\n");
-            Console.WriteLine(" Матрицы равны: " + (myMatrix1 == myMatrix2) + "\n");
-            Console.WriteLine(" Матрицы не равны: " + (myMatrix1 != myMatrix2) + "\n");
-            Console.WriteLine(" 1-ая матрица нулевая: " + myMatrix1.IsMatrixNull() + "\n");
-            Console.WriteLine(" 2-ая матрица нулевая: " + myMatrix2.IsMatrixNull() + "\n");
-            Console.WriteLine(" Hash code 1-ой матрицы : " + myMatrix1.GetHashCode() + "\n");
-            Console.WriteLine(" Hash code 2-ой матрицы : " + myMatrix2.GetHashCode() + "\n");
+    class Add : Operation
+    {
+        public Add()
+        {
+            OperationType = "+";
+        }
+    }
+
+    class Multiplication : Operation
+    {
+        public Multiplication()
+        {
+            OperationType = "*";
+        }
+    }
+
+    class More : Operation
+    {
+        public More()
+        {
+            OperationType = ">";
+        }
+    }
+
+    class Less : Operation
+    {
+        public Less()
+        {
+            OperationType = "<";
+        }
+    }
+
+    class MoreOrEqual : Operation
+    {
+        public MoreOrEqual()
+        {
+            OperationType = ">=";
+        }
+    }
+
+    class LessOrEqual : Operation
+    {
+        public LessOrEqual()
+        {
+            OperationType = "<=";
+        }
+    }
+
+    class Equal : Operation
+    {
+        public Equal()
+        {
+            OperationType = "==";
+        }
+    }
+
+    class NotEqual : Operation
+    {
+        public NotEqual()
+        {
+            OperationType = "!=";
+        }
+    }
+
+    class Determinant : Operation
+    {
+        public Determinant()
+        {
+            OperationType = "determinant";
+        }
+    }
+
+    class Inverse : Operation
+    {
+        public Inverse()
+        {
+            OperationType = "inverse";
+        }
+    }
+
+    class Transposition : Operation
+    {
+        public Transposition()
+        {
+            OperationType = "transposition";
+        }
+    }
+
+    class Trace : Operation
+    {
+        public Trace()
+        {
+            OperationType = "trace";
+        }
+    }
+
+    class Diagonal : Operation
+    {
+        public Diagonal()
+        {
+            OperationType = "diagonal";
         }
     }
 }
