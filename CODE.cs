@@ -507,7 +507,7 @@ namespace DelegatesAndEvents
         public AddHandler()
         {
             Operation = new Add();
-            Next = null;
+            Next = new MultiplicationHandler();
             TargetFunction = delegate ()
             {
                 Console.WriteLine("\n Матрица 1:");
