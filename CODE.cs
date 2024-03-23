@@ -650,16 +650,16 @@ namespace DelegatesAndEvents
 
     public class ChainApplication
     {
-        private BaseHandler operationHandler;
+        private BaseHandler _operationHandler;
 
         public ChainApplication()
         {
-            operationHandler = new AddHandler();
+            _operationHandler = new AddHandler();
         }
 
-        public void Run(IOperation operation, SquareMatrix matrix1,  SquareMatrix matrix2)
+        public void Run(IOperation operation, SquareMatrix matrix1, SquareMatrix matrix2)
         {
-            operationHandler.Handle(operation, matrix1, matrix2);
+            _operationHandler.Handle(operation, matrix1, matrix2);
         }
     }
 
