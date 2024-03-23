@@ -409,19 +409,11 @@ namespace DelegatesAndEvents
         }
     }
 
-    class Equal : IOperation
-    {
-        public Equal()
-        {
-            OperationType = "3";
-        }
-    }
-
     class Determinant : IOperation
     {
         public Determinant()
         {
-            OperationType = "4";
+            OperationType = "3";
         }
     }
 
@@ -429,7 +421,7 @@ namespace DelegatesAndEvents
     {
         public Inverse()
         {
-            OperationType = "5";
+            OperationType = "4";
         }
     }
 
@@ -437,7 +429,7 @@ namespace DelegatesAndEvents
     {
         public Transposition()
         {
-            OperationType = "6";
+            OperationType = "5";
         }
     }
 
@@ -445,7 +437,7 @@ namespace DelegatesAndEvents
     {
         public Trace()
         {
-            OperationType = "7";
+            OperationType = "6";
         }
     }
 
@@ -453,7 +445,7 @@ namespace DelegatesAndEvents
     {
         public Diagonal()
         {
-            OperationType = "8";
+            OperationType = "7";
         }
     }
 
@@ -478,7 +470,7 @@ namespace DelegatesAndEvents
 
             if (Operation.OperationType == operation.OperationType)
             {
-                Console.WriteLine("\n Операция успешно обработана");
+                Console.WriteLine("\n Операция успешно обработана, номер обработчика: " + Operation.OperationType);
                 TargetFunction();
             }
             else
@@ -525,7 +517,7 @@ namespace DelegatesAndEvents
         public MultiplicationHandler()
         {
             Operation = new Multiplication();
-            Next = new EqualHandler();
+            Next = new DeterminantHandler();
             TargetFunction = delegate ()
             {
                 Console.WriteLine("\n Матрица 1:");
@@ -534,23 +526,6 @@ namespace DelegatesAndEvents
                 Console.WriteLine(Matrix2);
                 Console.WriteLine(" Произведение матриц:");
                 Console.WriteLine(Matrix1 * Matrix2);
-            };
-        }
-    }
-
-    class EqualHandler : BaseHandler
-    {
-        public EqualHandler()
-        {
-            Operation = new Equal();
-            Next = new DeterminantHandler();
-            TargetFunction = delegate ()
-            {
-                Console.WriteLine("\n Матрица 1:");
-                Console.WriteLine(Matrix1);
-                Console.WriteLine(" Матрица 2:");
-                Console.WriteLine(Matrix2);
-                Console.WriteLine(" Матрицы равны: " + (Matrix1 == Matrix2) + "\n");
             };
         }
     }
